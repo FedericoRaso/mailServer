@@ -16,6 +16,8 @@ public class ServerHandler implements Runnable {
     private Socket incoming;
     private ServerController controller;
     private static final String EMAIL_REGEX = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+    private JSONArray userMails=null;
+
 
     public ServerHandler(Socket incoming, ServerController serverController) {
         this.incoming = incoming;
@@ -38,9 +40,12 @@ public class ServerHandler implements Runnable {
 
 
                 //out.println(line);
-
                 String answer = loginControls(line);
                 out.println(answer);
+                if(userMails != null) {
+                    out.print(userMails.toJSONString());
+                }
+
 
                 /*System.out.println(line);
                 controller.addLog(line);*/
@@ -51,6 +56,10 @@ public class ServerHandler implements Runnable {
         }catch(IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private String fromJSONtoString (String title, JSONObject o){
+        return o.get(title).toString();
     }
 
 
@@ -72,15 +81,18 @@ public class ServerHandler implements Runnable {
                     String nome = (String) person.get("email");
 
                     if(nome.equals(line)) {
+                        controller.addLog("found a mail from user "+ nome);
+                        userMails.add(person);//non so bene cosa significhi il warning
+
                         isFound=true;
-                        break;
+
                     }
                 }
 
             } catch (IOException | ParseException e) {
                 e.printStackTrace();
             }
-
+            controller.addLog(userMails.toJSONString());
             return (isFound) ? "correct":"wrong";
         }
 

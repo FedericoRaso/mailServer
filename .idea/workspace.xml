@@ -5,16 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="203dd4a8-770a-481a-8f1d-a0871a3b2a3c" name="Changes" comment="ghj">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/mailserver/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/mailserver/controller/ServerController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/mailserver/model/Server.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/mailserver/model/ServerHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/com/example/mailserver/log-view.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mailserver/HelloApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mailserver/HelloController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/mailserver/hello-view.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mailserver/model/ServerHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mailserver/model/ServerHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/User.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/User.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,16 +24,16 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "FedericoRaso"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;FedericoRaso&quot;
   }
-}]]></component>
+}</component>
   <component name="GithubPullRequestsUISettings"><![CDATA[{
   "selectedUrlAndAccountId": {
     "url": "https://github.com/FedericoRaso/mailServer.git",
-    "accountId": "dfcfeebd-a86a-4f3d-9cc5-5bc65cc6756e"
+    "accountId": "9996267f-9d8f-4805-86fd-8026bd9698e5"
   }
 }]]></component>
   <component name="MavenImportPreferences">
@@ -62,23 +55,36 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.Main.executor": "Run",
+    "Application.Unnamed.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/programmi/progettoProg3/mainClient",
+    "last_opened_file_path": "C:/Users/Federico/Desktop/progetto prog III/mianClient",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.mailserver.Main" />
+      <module name="mailServer" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.22855.74" />
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.22855.74" />
+        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23726.103" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23726.103" />
       </set>
     </attachedChunks>
   </component>
@@ -92,6 +98,7 @@
       <updated>1731605834436</updated>
       <workItem from="1731605835357" duration="1814000" />
       <workItem from="1732199162305" duration="6534000" />
+      <workItem from="1732459722331" duration="10108000" />
     </task>
     <task id="LOCAL-00001" summary="ghj">
       <option name="closed" value="true" />
