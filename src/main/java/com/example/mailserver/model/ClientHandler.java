@@ -85,9 +85,9 @@ public class ClientHandler implements Runnable {
                         if(userMails == null) {
                             userMails = new JSONArray();
                         }
-                        i++;
+
                         userMails.add(person);//non so bene cosa significhi il warning
-                        controller.addLog(i+userMails.toJSONString());
+                        controller.addLog((i++)+userMails.toJSONString());
 
                         isFound=true;
 
