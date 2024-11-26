@@ -43,7 +43,7 @@ public class ClientHandler implements Runnable {
                 String answer = loginControls(line);
                 if(userMails != null ) {
                     controller.addLog("mando l'array json al client");
-                    out.println(userMails.toJSONString());
+                    out.println(userMails);
                 }else{
                     out.println(answer);
                 }
@@ -86,11 +86,10 @@ public class ClientHandler implements Runnable {
                             userMails = new JSONArray();
                         }
 
-                        userMails.add(person);//non so bene cosa significhi il warning
-                        controller.addLog((i++)+userMails.toJSONString());
-
+                        userMails = (JSONArray) person.get("inbox");
+                        controller.addLog(userMails.toJSONString());
                         isFound=true;
-
+                        break;
                     }
                 }
 
