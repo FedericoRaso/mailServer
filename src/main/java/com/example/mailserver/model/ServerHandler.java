@@ -41,10 +41,13 @@ public class ServerHandler implements Runnable {
 
                 //out.println(line);
                 String answer = loginControls(line);
-                out.println(answer);
-                if(userMails != null) {
-                    out.print(userMails.toJSONString());
+                if(userMails != null ) {
+                    controller.addLog("mando l'array json al client");
+                    out.println(userMails.toJSONString());
+                }else{
+                    out.println(answer);
                 }
+
 
 
                 /*System.out.println(line);
@@ -75,14 +78,19 @@ public class ServerHandler implements Runnable {
                 Object obj = parser.parse(new FileReader("src/main/resources/data/User.json"));
 
                 JSONArray jsonArray = (JSONArray) obj;
+                int i=0;
 
                 for (Object o : jsonArray) {
                     JSONObject person = (JSONObject) o;
                     String nome = (String) person.get("email");
 
                     if(nome.equals(line)) {
-                        controller.addLog("found a mail from user "+ nome);
+                        if(userMails == null) {
+                            userMails = new JSONArray();
+                        }
+                        i++;
                         userMails.add(person);//non so bene cosa significhi il warning
+                        controller.addLog(i+userMails.toJSONString());
 
                         isFound=true;
 
