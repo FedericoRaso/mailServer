@@ -16,6 +16,8 @@ public class ClientHandler implements Runnable {
     private Socket incoming;
     private ServerController controller;
     private static final String EMAIL_REGEX = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+    private JSONArray userMails=null;
+
 
     public ClientHandler(Socket incoming, ServerController serverController) {
         this.incoming = incoming;
@@ -36,8 +38,17 @@ public class ClientHandler implements Runnable {
 
                 String line = in.nextLine(); //textfield login
 
+
+                //out.println(line);
                 String answer = loginControls(line);
-                out.println(answer);
+                if(userMails != null ) {
+                    controller.addLog("mando l'array json al client");
+                    out.println(userMails.toJSONString());
+                }else{
+                    out.println(answer);
+                }
+
+
 
             } finally {
             incoming.close();
@@ -45,6 +56,10 @@ public class ClientHandler implements Runnable {
         }catch(IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private String fromJSONtoString (String title, JSONObject o){
+        return o.get(title).toString();
     }
 
 
@@ -60,21 +75,29 @@ public class ClientHandler implements Runnable {
                 Object obj = parser.parse(new FileReader("src/main/resources/data/User.json"));
 
                 JSONArray jsonArray = (JSONArray) obj;
+                int i=0;
 
                 for (Object o : jsonArray) {
                     JSONObject person = (JSONObject) o;
                     String nome = (String) person.get("email");
 
                     if(nome.equals(line)) {
+                        if(userMails == null) {
+                            userMails = new JSONArray();
+                        }
+                        i++;
+                        userMails.add(person);//non so bene cosa significhi il warning
+                        controller.addLog(i+userMails.toJSONString());
+
                         isFound=true;
-                        break;
+
                     }
                 }
 
             } catch (IOException | ParseException e) {
                 e.printStackTrace();
             }
-
+            controller.addLog(userMails.toJSONString());
             return (isFound) ? "correct":"wrong";
         }
 

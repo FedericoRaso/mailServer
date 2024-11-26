@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="203dd4a8-770a-481a-8f1d-a0871a3b2a3c" name="Changes" comment="ghj">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/mailserver/model/Protocol.java" afterDir="false" />
+    <list default="true" id="203dd4a8-770a-481a-8f1d-a0871a3b2a3c" name="Changes" comment="started working on server">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mailserver/model/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mailserver/model/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mailserver/model/ServerHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mailserver/model/ClientHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/data/User.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/User.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mailserver/model/ServerHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mailserver/model/ServerHandler.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,7 +17,6 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
-        <option value="Enum" />
       </list>
     </option>
   </component>
@@ -36,7 +32,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/FedericoRaso/mailServer.git&quot;,
-    &quot;accountId&quot;: &quot;754e35d8-781a-45b5-af3d-aa46f1d569d1&quot;
+    &quot;accountId&quot;: &quot;dfcfeebd-a86a-4f3d-9cc5-5bc65cc6756e&quot;
   }
 }</component>
   <component name="MavenImportPreferences">
@@ -61,35 +57,18 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/feder/IdeaProjects/ThreadCallable_Matrix",
+    "last_opened_file_path": "D:/programmi/progettoProg3/mailServer",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager">
-    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.example.mailserver.Main" />
-      <module name="mailServer" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.example.mailserver.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Application.Main" />
-      </list>
-    </recent_temporary>
-  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -108,9 +87,8 @@
       <updated>1731605834436</updated>
       <workItem from="1731605835357" duration="1814000" />
       <workItem from="1732199162305" duration="6534000" />
-      <workItem from="1732270132638" duration="212000" />
-      <workItem from="1732627380344" duration="9000" />
-      <workItem from="1732627443772" duration="4780000" />
+      <workItem from="1732545246868" duration="5740000" />
+      <workItem from="1732627387174" duration="1898000" />
     </task>
     <task id="LOCAL-00001" summary="ghj">
       <option name="closed" value="true" />
@@ -120,26 +98,23 @@
       <option name="project" value="LOCAL" />
       <updated>1731605911712</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="started working on server">
+      <option name="closed" value="true" />
+      <created>1732545269766</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1732545269766</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="ghj" />
-    <MESSAGE value="added controls" />
-    <option name="LAST_COMMIT_MESSAGE" value="added controls" />
+    <MESSAGE value="started working on server" />
+    <option name="LAST_COMMIT_MESSAGE" value="started working on server" />
   </component>
 </project>
