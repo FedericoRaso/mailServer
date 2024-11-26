@@ -1,7 +1,16 @@
 [
   {
     "email" : "mattia@gmail.com",
-    "inbox" : "vuota1"
+    "inbox" : [{
+                "destinatario" : "mattia@gmail.com",
+                "mittente" : "luca@gmail.com",
+                "oggetto" : "prova1"
+              },{
+                "destinatario" : "mattia@gmail.com",
+                "mittente" : "mattia@gmail.com",
+                "oggetto" : "prova2"
+              }
+    ]
   },
   {
     "email" : "marco@gmail.com",

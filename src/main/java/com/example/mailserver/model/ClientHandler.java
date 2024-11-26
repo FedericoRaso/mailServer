@@ -12,12 +12,12 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ServerHandler implements Runnable {
+public class ClientHandler implements Runnable {
     private Socket incoming;
     private ServerController controller;
     private static final String EMAIL_REGEX = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
 
-    public ServerHandler(Socket incoming, ServerController serverController) {
+    public ClientHandler(Socket incoming, ServerController serverController) {
         this.incoming = incoming;
         this.controller = serverController;
     }
@@ -36,14 +36,8 @@ public class ServerHandler implements Runnable {
 
                 String line = in.nextLine(); //textfield login
 
-
-                //out.println(line);
-
                 String answer = loginControls(line);
                 out.println(answer);
-
-                /*System.out.println(line);
-                controller.addLog(line);*/
 
             } finally {
             incoming.close();
