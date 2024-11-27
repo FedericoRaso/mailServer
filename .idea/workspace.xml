@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="203dd4a8-770a-481a-8f1d-a0871a3b2a3c" name="Changes" comment="iniziato a lavorare sulla trasmissioni di dati in formato json">
+    <list default="true" id="203dd4a8-770a-481a-8f1d-a0871a3b2a3c" name="Changes" comment="merge ClientHandler">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mailserver/model/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mailserver/model/ClientHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mailserver/model/Protocol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mailserver/model/Protocol.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,12 +30,12 @@
     &quot;assignee&quot;: &quot;FedericoRaso&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/FedericoRaso/mailServer.git&quot;,
-    &quot;accountId&quot;: &quot;dfcfeebd-a86a-4f3d-9cc5-5bc65cc6756e&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/FedericoRaso/mailServer.git",
+    "accountId": "754e35d8-781a-45b5-af3d-aa46f1d569d1"
   }
-}</component>
+}]]></component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -57,7 +58,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/programmi/progettoProg3/mailServer",
+    "last_opened_file_path": "C:/Users/feder/Desktop/Vero_Progetto Prog III/mianClient",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -89,6 +90,7 @@
       <workItem from="1732199162305" duration="6534000" />
       <workItem from="1732545246868" duration="5740000" />
       <workItem from="1732627387174" duration="7157000" />
+      <workItem from="1732713908369" duration="4722000" />
     </task>
     <task id="LOCAL-00001" summary="ghj">
       <option name="closed" value="true" />
