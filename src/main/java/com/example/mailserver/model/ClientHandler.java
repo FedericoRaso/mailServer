@@ -16,50 +16,51 @@ public class ClientHandler implements Runnable {
     private Socket incoming;
     private ServerController controller;
     private static final String EMAIL_REGEX = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
-    private JSONArray userMails=null;
+    private JSONArray inbox =null;
+    private InputStream inStream = null;
+    private OutputStream outStream = null;
+    private Scanner in = null;
+    private PrintWriter out = null;
 
 
-    public ClientHandler(Socket incoming, ServerController serverController) {
+    public ClientHandler(Socket incoming, ServerController serverController) throws IOException {
         this.incoming = incoming;
         this.controller = serverController;
+        inStream = incoming.getInputStream();
+        outStream = incoming.getOutputStream();
+        in  = new Scanner(inStream);
+        out = new PrintWriter(outStream, true);
     }
+
     @Override
     public void run() {
         System.out.println("sono in run server handler");
 
-        try{
-            try{
+        try {
+            Protocol protocol = Protocol.valueOf(in.nextLine());
+            System.out.println("protocollo" + protocol);
+            switch (protocol) {
+                case LOGIN -> {
 
-                InputStream incomingStream = incoming.getInputStream();
-                OutputStream outgoingStream = incoming.getOutputStream();
-                Scanner in  = new Scanner(incomingStream);
-                PrintWriter out = new PrintWriter(outgoingStream, true);
+                    String line = in.nextLine();  //legge da client il login
 
-
-                String line = in.nextLine(); //textfield login
-
-
-                //out.println(line);
-                String answer = loginControls(line);
-                if(userMails != null ) {
-                    controller.addLog("mando l'array json al client");
-                    out.println(userMails);
-                }else{
-                    out.println(answer);
+                    String answer = loginControls(line);    //controlla se il login esiste
+                    if (inbox != null) {
+                        controller.addLog("mando l'inbox di " + line + " al client");
+                        out.println(inbox);     //invia l'inbox al client
+                    } else {
+                        out.println(answer); //se userMails non è pieno significa che la lo user non esiste
+                    }
                 }
-
-
-
-            } finally {
-            incoming.close();
             }
-        }catch(IOException e) {
-            e.printStackTrace();
-        }
-    }
 
-    private String fromJSONtoString (String title, JSONObject o){
-        return o.get(title).toString();
+        }finally {
+            try {
+                incoming.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
 
@@ -82,12 +83,11 @@ public class ClientHandler implements Runnable {
                     String nome = (String) person.get("email");
 
                     if(nome.equals(line)) {
-                        if(userMails == null) {
-                            userMails = new JSONArray();
+                        if(inbox == null) {
+                            inbox = new JSONArray();
                         }
 
-                        userMails = (JSONArray) person.get("inbox");
-                        controller.addLog(userMails.toJSONString());
+                        inbox = (JSONArray) person.get("inbox");
                         isFound=true;
                         break;
                     }
@@ -96,7 +96,7 @@ public class ClientHandler implements Runnable {
             } catch (IOException | ParseException e) {
                 e.printStackTrace();
             }
-            controller.addLog(userMails.toJSONString());
+
             return (isFound) ? "correct":"wrong";
         }
 
