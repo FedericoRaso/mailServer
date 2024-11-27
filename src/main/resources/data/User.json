@@ -3,6 +3,7 @@
     "email": "mattia@gmail.com",
     "inbox": [
       {
+        "id" : "1email",
         "receivers": ["mattia@gmail.com","luca@gmail.com"],
         "sender": "michele@gmail.com",
         "subject": "example mail",
@@ -10,6 +11,7 @@
         "date": "02/01/2024"
       },
       {
+        "id" : "2email",
         "receivers": ["mattia@gmail.com"],
         "sender": "luca@gmail.com",
         "subject": "example mail2",
@@ -22,6 +24,7 @@
     "email": "marco@gmail.com",
     "inbox": [
       {
+        "id" : "3email",
         "receivers": ["marco@gmail.com"],
         "sender": "fede@gmail.com",
         "subject": "example mail3",
@@ -29,6 +32,7 @@
         "date": "02/01/2024"
       },
       {
+        "id" : "4email",
         "receivers": ["marco@gmail.com"],
         "sender": "gabri@gmail.com",
         "subject": "example mail4",

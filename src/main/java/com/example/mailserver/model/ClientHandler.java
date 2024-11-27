@@ -8,6 +8,7 @@ import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -52,6 +53,15 @@ public class ClientHandler implements Runnable {
                         out.println(answer); //se userMails non è pieno significa che la lo user non esiste
                     }
                 }
+                case DELETE -> {
+                    String idMail = in.next();
+                    String user = in.nextLine();
+                    try {
+                        deleteMail(user, idMail);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             }
 
         }finally {
@@ -74,7 +84,6 @@ public class ClientHandler implements Runnable {
         }else{
             try {
                 Object obj = parser.parse(new FileReader("src/main/resources/data/User.json"));
-
                 JSONArray jsonArray = (JSONArray) obj;
                 int i=0;
 
@@ -102,6 +111,18 @@ public class ClientHandler implements Runnable {
 
 
 
+    }
+
+    public void deleteMail(String user, String idMail) throws Exception {
+
+        try{
+
+            //devo gestire la eliminazione da file
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public static boolean isValidEmail(String email) {
