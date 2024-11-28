@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import javax.print.attribute.standard.JobKOctets;
 import java.io.*;
 import java.net.Socket;
 import java.util.Map;
@@ -50,11 +51,11 @@ public class ClientHandler implements Runnable {
                         controller.addLog("mando l'inbox di " + line + " al client");
                         out.println(inbox);     //invia l'inbox al client
                     } else {
-                        out.println(answer); //se userMails non è pieno significa che la lo user non esiste
+                        out.println(answer); //se userMails non è pieno significa che lo user non esiste
                     }
                 }
                 case DELETE -> {
-                    String idMail = in.next();
+                    String idMail = in.nextLine();
                     String user = in.nextLine();
                     try {
                         deleteMail(user, idMail);
@@ -77,7 +78,6 @@ public class ClientHandler implements Runnable {
     public String loginControls(String line) {
         JSONParser parser = new JSONParser();
         boolean isFound=false;
-        String answer;
 
         if(!isValidEmail(line)) {
             return "nome@gmail.com";
@@ -108,21 +108,45 @@ public class ClientHandler implements Runnable {
 
             return (isFound) ? "correct":"wrong";
         }
-
-
-
     }
 
-    public void deleteMail(String user, String idMail) throws Exception {
+    public void deleteMail(String user, String idMail){
 
-        try{
+        String userDaCercare = user;
+        String idDaEliminare = idMail;
 
-            //devo gestire la eliminazione da file
+        try {
 
+            JSONParser parser = new JSONParser();
+            Object obj = parser.parse(new FileReader("src/main/resources/data/User.json"));
+            JSONArray users = (JSONArray) obj;
 
-        }catch (Exception e){
+            for (int i = 0; i < users.size(); i++) {
+                JSONObject utente = (JSONObject) users.get(i);
+                String emailUtente = (String)utente.get("email");
+
+                if (emailUtente.equals(userDaCercare)) {
+                    JSONArray inbox = (JSONArray) utente.get("inbox");
+
+                    for (int j = 0; j < inbox.size(); j++) {
+                        JSONObject email = (JSONObject) inbox.get(j);
+                        if (email.get("id").equals(idDaEliminare)) {
+                            inbox.remove(j);
+                            controller.addLog(user + " ha eliminato una mail");
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+
+            FileWriter writer = new FileWriter("src/main/resources/data/User.json");
+            writer.write(users.toString());
+            writer.close();
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     public static boolean isValidEmail(String email) {
