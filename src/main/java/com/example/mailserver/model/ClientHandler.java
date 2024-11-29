@@ -8,9 +8,12 @@ import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.locks.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.concurrent.*;
 
 public class ClientHandler implements Runnable {
     private Socket incoming;
@@ -21,6 +24,10 @@ public class ClientHandler implements Runnable {
     private OutputStream outStream = null;
     private Scanner in = null;
     private PrintWriter out = null;
+    private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+    private Lock readLock = readWriteLock.readLock();
+    private Lock writeLock = readWriteLock.writeLock();
+    private final String path = "src/main/resources/data/User.json";
 
 
     public ClientHandler(Socket incoming, ServerController serverController) throws IOException {
@@ -52,6 +59,12 @@ public class ClientHandler implements Runnable {
                         out.println(answer); //se userMails non è pieno significa che la lo user non esiste
                     }
                 }
+                case SEND ->{
+                    String line = in.nextLine();
+                    controller.addLog(line);
+                    acquireAndWriteMail(line);
+
+                }
             }
 
         }finally {
@@ -61,6 +74,40 @@ public class ClientHandler implements Runnable {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    public void acquireAndWriteMail (String mailString)  {
+        writeLock.lock();
+        JSONParser parser = new JSONParser();
+        try{
+            JSONArray users = (JSONArray) parser.parse(new FileReader(path));
+
+            controller.addLog(users.toJSONString());
+
+            JSONObject newMail = (JSONObject) parser.parse(mailString);
+            JSONArray receivers = (JSONArray) newMail.get("receivers");
+
+            for(Object o : users){
+                JSONObject user = (JSONObject) o;
+                String email = (String) user.get("email");
+
+                if(receivers.contains(email)){
+                    JSONArray inbox = (JSONArray) user.get("inbox");
+                    inbox.add(email);
+                }
+            }
+
+
+
+            /*try(FileWriter fw = new FileWriter(path)){
+                fw.write(users.toString());
+                fw.flush();
+            }*/
+
+        }catch(IOException | ParseException e){
+            e.printStackTrace();
+        }
+        writeLock.unlock();
     }
 
 
@@ -73,10 +120,9 @@ public class ClientHandler implements Runnable {
             return "nome@gmail.com";
         }else{
             try {
-                Object obj = parser.parse(new FileReader("src/main/resources/data/User.json"));
+                Object obj = parser.parse(new FileReader(path));
 
                 JSONArray jsonArray = (JSONArray) obj;
-                int i=0;
 
                 for (Object o : jsonArray) {
                     JSONObject person = (JSONObject) o;
