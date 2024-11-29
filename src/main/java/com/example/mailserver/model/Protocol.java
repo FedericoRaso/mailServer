@@ -4,5 +4,6 @@ public enum Protocol {
     LOGIN,
     LOGOUT,
     SEND,
+    DELETE,
     DEFAULT
 }

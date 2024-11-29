@@ -6,9 +6,10 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import javax.print.attribute.standard.JobKOctets;
 import java.io.*;
 import java.net.Socket;
-import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.locks.*;
 import java.util.regex.Matcher;
@@ -56,14 +57,17 @@ public class ClientHandler implements Runnable {
                         controller.addLog("mando l'inbox di " + line + " al client");
                         out.println(inbox);     //invia l'inbox al client
                     } else {
-                        out.println(answer); //se userMails non è pieno significa che la lo user non esiste
+                        out.println(answer); //se userMails non è pieno significa che lo user non esiste
                     }
                 }
-                case SEND ->{
-                    String line = in.nextLine();
-                    controller.addLog(line);
-                    acquireAndWriteMail(line);
-
+                case DELETE -> {
+                    String idMail = in.nextLine();
+                    String user = in.nextLine();
+                    try {
+                        deleteMail(user, idMail);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
 
@@ -76,40 +80,6 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    public void acquireAndWriteMail (String mailString)  {
-        writeLock.lock();
-        JSONParser parser = new JSONParser();
-        try{
-            JSONArray users = (JSONArray) parser.parse(new FileReader(path));
-
-            controller.addLog(users.toJSONString());
-
-            JSONObject newMail = (JSONObject) parser.parse(mailString);
-            JSONArray receivers = (JSONArray) newMail.get("receivers");
-
-            for(Object o : users){
-                JSONObject user = (JSONObject) o;
-                String email = (String) user.get("email");
-
-                if(receivers.contains(email)){
-                    JSONArray inbox = (JSONArray) user.get("inbox");
-                    inbox.add(email);
-                }
-            }
-
-
-
-            /*try(FileWriter fw = new FileWriter(path)){
-                fw.write(users.toString());
-                fw.flush();
-            }*/
-
-        }catch(IOException | ParseException e){
-            e.printStackTrace();
-        }
-        writeLock.unlock();
-    }
-
 
     public String loginControls(String line) {
         JSONParser parser = new JSONParser();
@@ -120,9 +90,9 @@ public class ClientHandler implements Runnable {
             return "nome@gmail.com";
         }else{
             try {
-                Object obj = parser.parse(new FileReader(path));
-
+                Object obj = parser.parse(new FileReader("src/main/resources/data/User.json"));
                 JSONArray jsonArray = (JSONArray) obj;
+                int i=0;
 
                 for (Object o : jsonArray) {
                     JSONObject person = (JSONObject) o;
@@ -145,8 +115,44 @@ public class ClientHandler implements Runnable {
 
             return (isFound) ? "correct":"wrong";
         }
+    }
 
+    public void deleteMail(String user, String idMail){
 
+        String userDaCercare = user;
+        String idDaEliminare = idMail;
+
+        try {
+
+            JSONParser parser = new JSONParser();
+            Object obj = parser.parse(new FileReader("src/main/resources/data/User.json"));
+            JSONArray users = (JSONArray) obj;
+
+            for (int i = 0; i < users.size(); i++) {
+                JSONObject utente = (JSONObject) users.get(i);
+                String emailUtente = (String)utente.get("email");
+
+                if (emailUtente.equals(userDaCercare)) {
+                    JSONArray inbox = (JSONArray) utente.get("inbox");
+
+                    for (int j = 0; j < inbox.size(); j++) {
+                        JSONObject email = (JSONObject) inbox.get(j);
+                        if (email.get("id").equals(idDaEliminare)) {
+                            inbox.remove(j);
+                            controller.addLog(user + " ha eliminato una mail");
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+
+            FileWriter writer = new FileWriter("src/main/resources/data/User.json");
+            writer.write(users.toString());
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
