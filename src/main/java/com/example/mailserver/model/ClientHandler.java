@@ -11,8 +11,10 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.locks.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.concurrent.*;
 
 public class ClientHandler implements Runnable {
     private Socket incoming;
@@ -23,6 +25,10 @@ public class ClientHandler implements Runnable {
     private OutputStream outStream = null;
     private Scanner in = null;
     private PrintWriter out = null;
+    private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+    private Lock readLock = readWriteLock.readLock();
+    private Lock writeLock = readWriteLock.writeLock();
+    private final String path = "src/main/resources/data/User.json";
 
 
     public ClientHandler(Socket incoming, ServerController serverController) throws IOException {
@@ -63,6 +69,12 @@ public class ClientHandler implements Runnable {
                         throw new RuntimeException(e);
                     }
                 }
+                case SEND ->{
+                    String newMail = in.nextLine();
+                    controller.addLog(newMail);
+                    sendMail(newMail);
+
+                }
             }
 
         }finally {
@@ -78,6 +90,7 @@ public class ClientHandler implements Runnable {
     public String loginControls(String line) {
         JSONParser parser = new JSONParser();
         boolean isFound=false;
+        String answer;
 
         if(!isValidEmail(line)) {
             return "nome@gmail.com";
@@ -110,6 +123,38 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    public void sendMail (String newMail){
+        JSONParser parser = new JSONParser();
+        try{
+            Object obj = parser.parse(new FileReader(path));
+            JSONArray users = (JSONArray) obj;
+            obj = parser.parse(newMail);
+            JSONObject mailToAdd = (JSONObject) obj;
+            JSONArray inbox = (JSONArray) mailToAdd.get("inbox");
+            JSONArray receivers = (JSONArray) mailToAdd.get("receivers");
+
+            for(int i=0; i<users.size(); i++){
+                JSONObject person = (JSONObject) users.get(i);
+                String userEmail = (String) person.get("email");
+                for(Object o : receivers){
+                    String toAddEmail = (String) o;
+                    if(userEmail.equals(toAddEmail)){
+                        JSONArray userInbox = (JSONArray) person.get("inbox");
+                        userInbox.add(mailToAdd);
+                    }
+                }
+
+            }
+
+            FileWriter fileWriter = new FileWriter(path);
+            fileWriter.write(users.toJSONString());
+            fileWriter.close();
+        }catch (ParseException | IOException e){
+            e.printStackTrace();
+        }
+
+    }
+
     public void deleteMail(String user, String idMail){
 
         String userDaCercare = user;
@@ -118,7 +163,7 @@ public class ClientHandler implements Runnable {
         try {
 
             JSONParser parser = new JSONParser();
-            Object obj = parser.parse(new FileReader("src/main/resources/data/User.json"));
+            Object obj = parser.parse(new FileReader(path));
             JSONArray users = (JSONArray) obj;
 
             for (int i = 0; i < users.size(); i++) {
