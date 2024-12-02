@@ -9,6 +9,7 @@ import org.json.simple.parser.ParseException;
 import javax.print.attribute.standard.JobKOctets;
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.locks.*;
@@ -54,7 +55,7 @@ public class ClientHandler implements Runnable {
 
                     String answer = loginControls(line);    //controlla se il login esiste
                     if (inbox != null) {
-                        controller.addLog("mando l'inbox di " + line + " al client");
+                        controller.addLog(line + " ha effettuato l'accesso");
                         out.println(inbox);     //invia l'inbox al client
                     } else {
                         out.println(answer); //se userMails non è pieno significa che lo user non esiste
@@ -70,10 +71,22 @@ public class ClientHandler implements Runnable {
                     }
                 }
                 case SEND ->{
+                    String recevers = in.nextLine();
+                    System.out.println(recevers);
+                    String controlReceivers = controlReceivers(recevers);
+                    out.println(controlReceivers);
                     String newMail = in.nextLine();
-                    controller.addLog(newMail);
                     sendMail(newMail);
-
+                    controller.addLog("Email scritta: "+newMail);
+                }
+                case FORWARD ->{
+                    String recevers = in.nextLine();
+                    System.out.println(recevers);
+                    String controlReceivers = controlReceivers(recevers);
+                    out.println(controlReceivers);
+                    String newMail = in.nextLine();
+                    sendMail(newMail);
+                    controller.addLog("Email inoltrata: " +newMail);
                 }
             }
 
@@ -96,7 +109,7 @@ public class ClientHandler implements Runnable {
             return "nome@gmail.com";
         }else{
             try {
-                Object obj = parser.parse(new FileReader("src/main/resources/data/User.json"));
+                Object obj = parser.parse(new FileReader(path));
                 JSONArray jsonArray = (JSONArray) obj;
                 int i=0;
 
@@ -185,7 +198,7 @@ public class ClientHandler implements Runnable {
                 }
             }
 
-            FileWriter writer = new FileWriter("src/main/resources/data/User.json");
+            FileWriter writer = new FileWriter(path);
             writer.write(users.toString());
             writer.close();
         } catch (Exception e) {
@@ -198,6 +211,42 @@ public class ClientHandler implements Runnable {
         Pattern pattern = Pattern.compile(EMAIL_REGEX);
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
+    }
+
+    public String controlReceivers(String receivers){
+
+        for (String email : receivers.split(", ")) {
+
+            if(!isValidEmail(email)){
+                return email;
+            }else{
+                try{
+                    JSONParser parser = new JSONParser();
+                    Object obj = parser.parse(new FileReader(path));
+                    JSONArray jsonArray = (JSONArray) obj;
+
+                    boolean isFound=false;
+
+                    for (Object o : jsonArray) {
+                        JSONObject person = (JSONObject) o;
+                        String nome = (String) person.get("email");
+
+                        if(nome.equals(email)) {
+                            isFound=true;
+                            break;
+                        }
+                    }
+
+                    if(!isFound){
+                        return email;
+                    }
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return "OK";
     }
 
 }
