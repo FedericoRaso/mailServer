@@ -47,7 +47,7 @@ public class ClientHandler implements Runnable {
 
         try {
             Protocol protocol = Protocol.valueOf(in.nextLine());
-            System.out.println("protocollo" + protocol);
+            System.out.println("protocollo " + protocol);
             switch (protocol) {
                 case LOGIN -> {
 
@@ -70,23 +70,13 @@ public class ClientHandler implements Runnable {
                         throw new RuntimeException(e);
                     }
                 }
-                case SEND ->{
+                case SEND, FORWARD, REPLAYALL, REPLAY ->{
                     String recevers = in.nextLine();
-                    System.out.println(recevers);
                     String controlReceivers = controlReceivers(recevers);
                     out.println(controlReceivers);
                     String newMail = in.nextLine();
                     sendMail(newMail);
-                    controller.addLog("Email scritta: "+newMail);
-                }
-                case FORWARD ->{
-                    String recevers = in.nextLine();
-                    System.out.println(recevers);
-                    String controlReceivers = controlReceivers(recevers);
-                    out.println(controlReceivers);
-                    String newMail = in.nextLine();
-                    sendMail(newMail);
-                    controller.addLog("Email inoltrata: " +newMail);
+                    controller.addLog("Email "+protocol+" "+newMail);
                 }
             }
 

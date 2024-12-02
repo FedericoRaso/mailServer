@@ -5,5 +5,7 @@ public enum Protocol {
     LOGOUT,
     SEND,
     DELETE,
-    FORWARD
+    FORWARD,
+    REPLAYALL,
+    REPLAY
 }
