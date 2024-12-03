@@ -10,6 +10,7 @@ import javax.print.attribute.standard.JobKOctets;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.locks.*;
@@ -78,6 +79,12 @@ public class ClientHandler implements Runnable {
                     sendMail(newMail);
                     controller.addLog("Email "+protocol+" "+newMail);
                 }
+                case REFRESH -> {
+                    String userInfo= in.nextLine();
+                    String answer = loginControls(userInfo);
+                    out.println(getInbox(userInfo));
+                    controller.addLog(""+protocol);
+                }
             }
 
         }finally {
@@ -89,8 +96,39 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    public String getInbox(String user){
+        JSONArray newInbox = null;
+        readLock.lock();
+        JSONParser parser = new JSONParser();
+
+        try {
+            Object obj = parser.parse(new FileReader(path));
+            JSONArray jsonArray = (JSONArray) obj;
+
+            for (Object o : jsonArray) {
+                JSONObject person = (JSONObject) o;
+                String nome = (String) person.get("email");
+
+                if(nome.equals(user)) {
+
+
+                    newInbox = (JSONArray) person.get("inbox");
+
+                    break;
+                }
+            }
+
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        } finally {
+            readLock.unlock();
+        }
+        return newInbox.toJSONString() ;
+    }
+
 
     public String loginControls(String line) {
+        readLock.lock();
         JSONParser parser = new JSONParser();
         boolean isFound=false;
         String answer;
@@ -120,6 +158,8 @@ public class ClientHandler implements Runnable {
 
             } catch (IOException | ParseException e) {
                 e.printStackTrace();
+            } finally {
+                readLock.unlock();
             }
 
             return (isFound) ? "correct":"wrong";
@@ -127,6 +167,7 @@ public class ClientHandler implements Runnable {
     }
 
     public void sendMail (String newMail){
+        writeLock.lock();
         JSONParser parser = new JSONParser();
         try{
             Object obj = parser.parse(new FileReader(path));
@@ -154,12 +195,14 @@ public class ClientHandler implements Runnable {
             fileWriter.close();
         }catch (ParseException | IOException e){
             e.printStackTrace();
+        }finally{
+            writeLock.unlock();
         }
 
     }
 
     public void deleteMail(String user, String idMail){
-
+        writeLock.lock();
         String userDaCercare = user;
         String idDaEliminare = idMail;
 
@@ -187,12 +230,13 @@ public class ClientHandler implements Runnable {
                     break;
                 }
             }
-
             FileWriter writer = new FileWriter(path);
             writer.write(users.toString());
             writer.close();
         } catch (Exception e) {
             e.printStackTrace();
+        }finally{
+            writeLock.unlock();
         }
 
     }
@@ -204,7 +248,7 @@ public class ClientHandler implements Runnable {
     }
 
     public String controlReceivers(String receivers){
-
+        readLock.lock();
         for (String email : receivers.split(", ")) {
 
             if(!isValidEmail(email)){
@@ -232,6 +276,8 @@ public class ClientHandler implements Runnable {
                     }
                 }catch(Exception e){
                     e.printStackTrace();
+                } finally {
+                    readLock.unlock();
                 }
             }
         }

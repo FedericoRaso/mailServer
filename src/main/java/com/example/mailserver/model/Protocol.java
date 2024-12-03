@@ -7,5 +7,6 @@ public enum Protocol {
     DELETE,
     FORWARD,
     REPLAYALL,
-    REPLAY
+    REPLAY,
+    REFRESH
 }
