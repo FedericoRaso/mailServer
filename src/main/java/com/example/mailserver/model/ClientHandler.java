@@ -81,13 +81,24 @@ public class ClientHandler implements Runnable {
                 }
                 case REFRESH -> {
                     String userInfo= in.nextLine();
-                    String answer = loginControls(userInfo);
+                    String oldInbox = in.nextLine();
+                    String newInbox = "";
+
+                    while(true){
+                        newInbox = getInbox(userInfo);
+                        if(!(oldInbox.equals(newInbox))){
+                            break;
+                        }
+                        Thread.sleep(2000);
+                    }
                     out.println(getInbox(userInfo));
-                    controller.addLog(""+protocol);
+                    controller.addLog(userInfo+"ha effettuato un refresh");
                 }
             }
 
-        }finally {
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
             try {
                 incoming.close();
             } catch (IOException e) {
@@ -97,8 +108,8 @@ public class ClientHandler implements Runnable {
     }
 
     public String getInbox(String user){
-        JSONArray newInbox = null;
         readLock.lock();
+        JSONArray newInbox = null;
         JSONParser parser = new JSONParser();
 
         try {
@@ -110,7 +121,6 @@ public class ClientHandler implements Runnable {
                 String nome = (String) person.get("email");
 
                 if(nome.equals(user)) {
-
 
                     newInbox = (JSONArray) person.get("inbox");
 
@@ -131,7 +141,6 @@ public class ClientHandler implements Runnable {
         readLock.lock();
         JSONParser parser = new JSONParser();
         boolean isFound=false;
-        String answer;
 
         if(!isValidEmail(line)) {
             return "nome@gmail.com";

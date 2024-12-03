@@ -17,7 +17,7 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
 
 
-         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("log-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("log-view.fxml"));
         ServerController controller = new ServerController();
         fxmlLoader.setController(controller);
 
