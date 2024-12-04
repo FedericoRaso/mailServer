@@ -24,12 +24,13 @@ public class Main extends Application {
         try{
              server=new Server(8189, controller);
              Thread threadServer=new Thread(server);
+             threadServer.setDaemon(true);
              threadServer.start();
         }catch(IOException e){
             e.printStackTrace();
         }
 
-        Scene scene = new Scene(fxmlLoader.load(), 400, 600);
+        Scene scene = new Scene(fxmlLoader.load(), 500,500 );
         stage.setTitle("Log Server");
         stage.setScene(scene);
         stage.show();

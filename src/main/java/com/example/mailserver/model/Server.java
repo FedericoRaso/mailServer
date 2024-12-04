@@ -25,15 +25,34 @@ public class Server implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("finestra del socket server");
+        System.out.println("finestra del socket server in ascolto ...");
         try{
 
-            while(true){
+            while(!serverSocket.isClosed()){
                 Socket incoming = serverSocket.accept();
                 pool.execute(new ClientHandler(incoming, serverController));
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            if(serverSocket.isClosed()){
+                serverController.addLog("Il server ha smesso di ricevere");
+            }else{
+                System.out.println("L'errore nel socket server: " +e.getMessage());
+            }
+        }finally {
+            stop();
+        }
+    }
+
+    public void stop() {
+        try{
+            System.out.println("Arresto del server...");
+            if(serverSocket != null && !serverSocket.isClosed()){
+                serverSocket.close();
+            }
+            pool.shutdown();
+            System.out.println("Server arrestato correttamente");
+        }catch(IOException e){
+            System.out.println("Errore durante l'arresto del server");
         }
     }
 }

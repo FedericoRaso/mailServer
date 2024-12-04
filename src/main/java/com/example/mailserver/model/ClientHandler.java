@@ -5,18 +5,12 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
-import javax.print.attribute.standard.JobKOctets;
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.locks.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.concurrent.*;
 
 public class ClientHandler implements Runnable {
     private Socket incoming;
@@ -44,7 +38,7 @@ public class ClientHandler implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("sono in run server handler");
+
 
         try {
             Protocol protocol = Protocol.valueOf(in.nextLine());
@@ -52,14 +46,14 @@ public class ClientHandler implements Runnable {
             switch (protocol) {
                 case LOGIN -> {
 
-                    String line = in.nextLine();  //legge da client il login
+                    String line = in.nextLine();
 
-                    String answer = loginControls(line);    //controlla se il login esiste
+                    String answer = loginControls(line);
                     if (inbox != null) {
                         controller.addLog(line + " ha effettuato l'accesso");
-                        out.println(inbox);     //invia l'inbox al client
+                        out.println(inbox);
                     } else {
-                        out.println(answer); //se userMails non è pieno significa che lo user non esiste
+                        out.println(answer);
                     }
                 }
                 case DELETE -> {
@@ -71,7 +65,7 @@ public class ClientHandler implements Runnable {
                         throw new RuntimeException(e);
                     }
                 }
-                case SEND, FORWARD, REPLAYALL, REPLAY ->{
+                case SEND, FORWARD, REPLYALL, REPLY ->{
                     String recevers = in.nextLine();
                     String controlReceivers = controlReceivers(recevers);
                     out.println(controlReceivers);
@@ -94,18 +88,30 @@ public class ClientHandler implements Runnable {
                     out.println(getInbox(userInfo));
                     controller.addLog(userInfo+"ha effettuato un refresh");
                 }
+                case LOGOUT -> {
+                    String user = in.nextLine();
+                    controller.addLog(user + " ha effettuato il logout");
+                }
             }
 
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            System.out.println("Errore nella gestione del client: "+e.getMessage());
         } finally {
             try {
-                incoming.close();
+                getClose();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                System.out.println("Errore nella gestione della chiusura dell'clienthandler: "+e.getMessage());
             }
         }
     }
+
+    public void getClose() throws IOException {
+        in.close();
+        out.close();
+        incoming.close();
+    }
+
+
 
     public String getInbox(String user){
         readLock.lock();

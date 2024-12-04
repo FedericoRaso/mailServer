@@ -6,7 +6,7 @@ public enum Protocol {
     SEND,
     DELETE,
     FORWARD,
-    REPLAYALL,
-    REPLAY,
+    REPLYALL,
+    REPLY,
     REFRESH
 }
