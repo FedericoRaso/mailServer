@@ -8,7 +8,7 @@ public class ServerController {
     private TextArea logTextArea;
     @FXML
     public void initialize(){
-        addLog("server avviato correttamente");
+        addLog("server avviato correttamente in ascolto ...");
     }
 
     @FXML
