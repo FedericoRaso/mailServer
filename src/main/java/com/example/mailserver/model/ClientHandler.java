@@ -1,6 +1,6 @@
 package com.example.mailserver.model;
 
-import com.example.mailserver.controller.ServerController;
+import com.example.mailserver.controller.LogController;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 public class ClientHandler implements Runnable {
     private Socket incoming;
-    private ServerController controller;
+    private LogController controller;
     private static final String EMAIL_REGEX = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
     private JSONArray inbox =null;
     private InputStream inStream = null;
@@ -26,31 +26,43 @@ public class ClientHandler implements Runnable {
     private Lock writeLock = readWriteLock.writeLock();
     private final String path = "src/main/resources/data/User.json";
 
-
-    public ClientHandler(Socket incoming, ServerController serverController) throws IOException {
+    /**
+     *
+     * constructor of the class
+     *
+     * @param incoming : socket of the server to connect with
+     * @param logController : controller of the view
+     * @throws IOException : exception thrown from "getInputStream" and "getOutStream" methods
+     */
+    public ClientHandler(Socket incoming, LogController logController) throws IOException {
         this.incoming = incoming;
-        this.controller = serverController;
+        this.controller = logController;
         inStream = incoming.getInputStream();
         outStream = incoming.getOutputStream();
         in  = new Scanner(inStream);
         out = new PrintWriter(outStream, true);
     }
 
+    /**
+     *
+     * method that runs when a thread is started
+     *
+     */
     @Override
     public void run() {
 
 
         try {
             Protocol protocol = Protocol.valueOf(in.nextLine());
-            System.out.println("protocollo " + protocol);
+            System.out.println("protocol " + protocol);
             switch (protocol) {
                 case LOGIN -> {
 
                     String line = in.nextLine();
 
-                    String answer = loginControls(line);
+                    String answer = loginChecks(line);
                     if (inbox != null) {
-                        controller.addLog(line + " ha effettuato l'accesso");
+                        controller.addLog(line + " logged in");
                         out.println(inbox);
                     } else {
                         out.println(answer);
@@ -67,7 +79,7 @@ public class ClientHandler implements Runnable {
                 }
                 case SEND, FORWARD, REPLYALL, REPLY ->{
                     String recevers = in.nextLine();
-                    String controlReceivers = controlReceivers(recevers);
+                    String controlReceivers = receiversChecks(recevers);
                     out.println(controlReceivers);
                     String newMail = in.nextLine();
                     sendMail(newMail);
@@ -86,33 +98,45 @@ public class ClientHandler implements Runnable {
                         Thread.sleep(2000);
                     }
                     out.println(getInbox(userInfo));
-                    controller.addLog(userInfo+"ha effettuato un refresh");
+                    controller.addLog(userInfo+" refreshed");
                 }
                 case LOGOUT -> {
                     String user = in.nextLine();
-                    controller.addLog(user + " ha effettuato il logout");
+                    controller.addLog(user + "logged out");
                 }
             }
 
         } catch (InterruptedException e) {
-            System.out.println("Errore nella gestione del client: "+e.getMessage());
+            System.out.println("Error in client handling: "+e.getMessage());
         } finally {
             try {
-                getClose();
+                closeConnection();
             } catch (IOException e) {
-                System.out.println("Errore nella gestione della chiusura dell'clienthandler: "+e.getMessage());
+                System.out.println("Error closing the client handler: "+e.getMessage());
             }
         }
     }
 
-    public void getClose() throws IOException {
+    /**
+     *
+     * method used to close the connection with the server
+     *
+     * @throws IOException : exception thrown from "close" method
+     */
+    public void closeConnection() throws IOException {
         in.close();
         out.close();
         incoming.close();
     }
 
 
-
+    /**
+     *
+     * method used to get the inbox of a user
+     *
+     * @param user : user whose inbox is requested
+     * @return : string representation
+     */
     public String getInbox(String user){
         readLock.lock();
         JSONArray newInbox = null;
@@ -142,8 +166,14 @@ public class ClientHandler implements Runnable {
         return newInbox.toJSONString() ;
     }
 
-
-    public String loginControls(String line) {
+    /**
+     * 
+     * method used to check if the login parameters are right
+     * 
+     * @param line : mail of the user
+     * @return : result of the checks
+     */
+    public String loginChecks(String line) {
         readLock.lock();
         JSONParser parser = new JSONParser();
         boolean isFound=false;
@@ -181,6 +211,12 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     *
+     * method used to send a mail to another user
+     *
+     * @param newMail : mail to be sent
+     */
     public void sendMail (String newMail){
         writeLock.lock();
         JSONParser parser = new JSONParser();
@@ -216,6 +252,13 @@ public class ClientHandler implements Runnable {
 
     }
 
+    /**
+     *
+     * method used to delete a mail from the inbox
+     *
+     * @param user : user that has the mail to be deleted
+     * @param idMail : id of the mail to be deleted
+     */
     public void deleteMail(String user, String idMail){
         writeLock.lock();
         String userDaCercare = user;
@@ -238,7 +281,7 @@ public class ClientHandler implements Runnable {
                         JSONObject email = (JSONObject) inbox.get(j);
                         if (email.get("id").equals(idDaEliminare)) {
                             inbox.remove(j);
-                            controller.addLog(user + " ha eliminato una mail");
+                            controller.addLog(user + " deleted a mail");
                             break;
                         }
                     }
@@ -256,13 +299,27 @@ public class ClientHandler implements Runnable {
 
     }
 
+    /**
+     *
+     * method used to check if the mail format is correct
+     *
+     * @param email : email to be checked
+     * @return : result of the checks
+     */
     public static boolean isValidEmail(String email) {
         Pattern pattern = Pattern.compile(EMAIL_REGEX);
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
 
-    public String controlReceivers(String receivers){
+    /**
+     *
+     * method used to check if the receivers of a mail exist
+     *
+     * @param receivers : string with the receivers of the mail
+     * @return : result of the checks
+     */
+    public String receiversChecks(String receivers){
         readLock.lock();
         for (String email : receivers.split(", ")) {
 

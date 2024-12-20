@@ -1,9 +1,8 @@
 package com.example.mailserver;
 
 import java.io.IOException;
-import java.net.ServerSocket;
 
-import com.example.mailserver.controller.ServerController;
+import com.example.mailserver.controller.LogController;
 import com.example.mailserver.model.Server;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -13,12 +12,19 @@ import javafx.stage.Stage;
 public class Main extends Application {
     Server server;
 
+    /**
+     *
+     * method used to start the log view
+     *
+     * @param stage : stage of the view
+     * @throws Exception : exception thrown "load" method
+     */
     @Override
     public void start(Stage stage) throws Exception {
 
 
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("log-view.fxml"));
-        ServerController controller = new ServerController();
+        LogController controller = new LogController();
         fxmlLoader.setController(controller);
 
         try{
@@ -35,6 +41,13 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.show();
     }
+
+    /**
+     *
+     * main method
+     *
+     * @param args : args from input
+     */
     public static void main(String[] args) {
         launch();
     }
