@@ -88,17 +88,21 @@ public class ClientHandler implements Runnable {
                 case REFRESH -> {
                     String userInfo= in.nextLine();
                     String oldInbox = in.nextLine();
-                    String newInbox = "";
+                    String newInbox = getInbox(userInfo);;
 
-                    while(true){
-                        newInbox = getInbox(userInfo);
-                        if(!(oldInbox.equals(newInbox))){
-                            break;
+                    if(oldInbox.equals(newInbox)){
+                        out.println("no changes");
+
+                    }else {
+                        out.println("changes");
+                        if(oldInbox.length() > newInbox.length()){
+                            out.println("deletion");
+                        }else{
+                            out.println("addition");
                         }
-                        Thread.sleep(2000);
+                        out.println(getInbox(userInfo));
+                        controller.addLog(userInfo + " refreshed");
                     }
-                    out.println(getInbox(userInfo));
-                    controller.addLog(userInfo+" refreshed");
                 }
                 case LOGOUT -> {
                     String user = in.nextLine();
@@ -106,7 +110,7 @@ public class ClientHandler implements Runnable {
                 }
             }
 
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             System.out.println("Error in client handling: "+e.getMessage());
         } finally {
             try {
@@ -116,6 +120,7 @@ public class ClientHandler implements Runnable {
             }
         }
     }
+
 
     /**
      *
