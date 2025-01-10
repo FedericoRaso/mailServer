@@ -90,13 +90,19 @@ public class ClientHandler implements Runnable {
                     String oldInbox = in.nextLine();
                     String newInbox = getInbox(userInfo);;
 
-                    if(!(oldInbox.equals(newInbox))){
-                        out.println("no new mail found");
-                        break;
+                    if(oldInbox.equals(newInbox)){
+                        out.println("no changes");
+
+                    }else {
+                        out.println("changes");
+                        if(oldInbox.length() > newInbox.length()){
+                            out.println("deletion");
+                        }else{
+                            out.println("addition");
+                        }
+                        out.println(getInbox(userInfo));
+                        controller.addLog(userInfo + " refreshed");
                     }
-                    out.println("new mail found");
-                    out.println(getInbox(userInfo));
-                    controller.addLog(userInfo+" refreshed");
                 }
                 case LOGOUT -> {
                     String user = in.nextLine();
