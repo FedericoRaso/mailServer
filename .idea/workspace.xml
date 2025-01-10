@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="203dd4a8-770a-481a-8f1d-a0871a3b2a3c" name="Changes" comment="ho iniziato a lavorare sul trasferimento delle informazioni in formato json" />
+    <list default="true" id="203dd4a8-770a-481a-8f1d-a0871a3b2a3c" name="Changes" comment="small changes">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mailserver/model/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mailserver/model/ClientHandler.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -29,7 +32,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/FedericoRaso/mailServer.git&quot;,
-    &quot;accountId&quot;: &quot;9996267f-9d8f-4805-86fd-8026bd9698e5&quot;
+    &quot;accountId&quot;: &quot;dfcfeebd-a86a-4f3d-9cc5-5bc65cc6756e&quot;
   }
 }</component>
   <component name="MavenImportPreferences">
@@ -40,47 +43,37 @@
     </option>
   </component>
   <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 5
-}</component>
+    &quot;associatedIndex&quot;: 5
+    }</component>
   <component name="ProjectId" id="2oqnAqn4BXYNNil0Nypnw0ZF8vn" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Unnamed.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Federico/Desktop/progetto prog III/mianClient&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/programmi/progettoProg3/mainClient",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
-  <component name="RunManager">
-    <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.example.mailserver.Main" />
-      <module name="mailServer" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-  </component>
+}]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23726.103" />
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23726.103" />
+        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.22855.74" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.22855.74" />
       </set>
     </attachedChunks>
   </component>
@@ -94,8 +87,15 @@
       <updated>1731605834436</updated>
       <workItem from="1731605835357" duration="1814000" />
       <workItem from="1732199162305" duration="6534000" />
-      <workItem from="1732459722331" duration="10108000" />
-      <workItem from="1732480757750" duration="232000" />
+      <workItem from="1732545246868" duration="5740000" />
+      <workItem from="1732627387174" duration="7157000" />
+      <workItem from="1732713908369" duration="12179000" />
+      <workItem from="1732799031873" duration="4985000" />
+      <workItem from="1733131063934" duration="14422000" />
+      <workItem from="1733567930929" duration="2237000" />
+      <workItem from="1734104395070" duration="1896000" />
+      <workItem from="1734198665866" duration="2943000" />
+      <workItem from="1736517251631" duration="1459000" />
     </task>
     <task id="LOCAL-00001" summary="ghj">
       <option name="closed" value="true" />
@@ -105,15 +105,95 @@
       <option name="project" value="LOCAL" />
       <updated>1731605911712</updated>
     </task>
-    <task id="LOCAL-00002" summary="ho iniziato a lavorare sul trasferimento delle informazioni in formato json">
+    <task id="LOCAL-00002" summary="started working on server">
       <option name="closed" value="true" />
-      <created>1732480827587</created>
+      <created>1732545269766</created>
       <option name="number" value="00002" />
       <option name="presentableId" value="LOCAL-00002" />
       <option name="project" value="LOCAL" />
-      <updated>1732480827587</updated>
+      <updated>1732545269766</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="iniziato a lavorare sulla trasmissioni di dati in formato json">
+      <option name="closed" value="true" />
+      <created>1732636126113</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1732636126113</updated>
+    </task>
+    <task id="LOCAL-00004" summary="iniziato a lavorare sulla trasmissioni di dati in formato json">
+      <option name="closed" value="true" />
+      <created>1732637330019</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1732637330019</updated>
+    </task>
+    <task id="LOCAL-00005" summary="gestione del Protocol lato server">
+      <option name="closed" value="true" />
+      <created>1732719227936</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1732719227936</updated>
+    </task>
+    <task id="LOCAL-00006" summary="nuovo file json">
+      <option name="closed" value="true" />
+      <created>1732722666002</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1732722666002</updated>
+    </task>
+    <task id="LOCAL-00007" summary="nuovo file json">
+      <option name="closed" value="true" />
+      <created>1732722819452</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1732722819452</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Delete Server solo iniziato">
+      <option name="closed" value="true" />
+      <created>1732728866394</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1732728866394</updated>
+    </task>
+    <task id="LOCAL-00009" summary="gestione dei controlli nella send">
+      <option name="closed" value="true" />
+      <created>1733141592514</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1733141592514</updated>
+    </task>
+    <task id="LOCAL-00010" summary="refresh lato server">
+      <option name="closed" value="true" />
+      <created>1733267756363</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1733267756363</updated>
+    </task>
+    <task id="LOCAL-00011" summary="refresh lato server">
+      <option name="closed" value="true" />
+      <created>1734200405548</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1734200405548</updated>
+    </task>
+    <task id="LOCAL-00012" summary="small changes">
+      <option name="closed" value="true" />
+      <created>1736517328051</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1736517328051</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -121,7 +201,15 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="ghj" />
-    <MESSAGE value="ho iniziato a lavorare sul trasferimento delle informazioni in formato json" />
-    <option name="LAST_COMMIT_MESSAGE" value="ho iniziato a lavorare sul trasferimento delle informazioni in formato json" />
+    <MESSAGE value="started working on server" />
+    <MESSAGE value="iniziato a lavorare sulla trasmissioni di dati in formato json" />
+    <MESSAGE value="gestione del Protocol lato server" />
+    <MESSAGE value="nuovo file json" />
+    <MESSAGE value="Delete Server solo iniziato" />
+    <MESSAGE value="gestione dei controlli nella send" />
+    <MESSAGE value="merge" />
+    <MESSAGE value="refresh lato server" />
+    <MESSAGE value="small changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="small changes" />
   </component>
 </project>
