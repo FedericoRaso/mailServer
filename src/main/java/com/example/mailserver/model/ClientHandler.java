@@ -88,15 +88,13 @@ public class ClientHandler implements Runnable {
                 case REFRESH -> {
                     String userInfo= in.nextLine();
                     String oldInbox = in.nextLine();
-                    String newInbox = "";
+                    String newInbox = getInbox(userInfo);;
 
-                    while(true){
-                        newInbox = getInbox(userInfo);
-                        if(!(oldInbox.equals(newInbox))){
-                            break;
-                        }
-                        Thread.sleep(2000);
+                    if(!(oldInbox.equals(newInbox))){
+                        out.println("no new mail found");
+                        break;
                     }
+                    out.println("new mail found");
                     out.println(getInbox(userInfo));
                     controller.addLog(userInfo+" refreshed");
                 }
@@ -106,7 +104,7 @@ public class ClientHandler implements Runnable {
                 }
             }
 
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             System.out.println("Error in client handling: "+e.getMessage());
         } finally {
             try {
@@ -116,6 +114,7 @@ public class ClientHandler implements Runnable {
             }
         }
     }
+
 
     /**
      *
