@@ -106,7 +106,7 @@ public class ClientHandler implements Runnable {
                 }
                 case LOGOUT -> {
                     String user = in.nextLine();
-                    controller.addLog(user + "logged out");
+                    controller.addLog(user + " logged out");
                 }
             }
 
