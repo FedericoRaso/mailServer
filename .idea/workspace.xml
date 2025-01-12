@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="203dd4a8-770a-481a-8f1d-a0871a3b2a3c" name="Changes" comment="small changes">
+    <list default="true" id="203dd4a8-770a-481a-8f1d-a0871a3b2a3c" name="Changes" comment="pulizia codice, controllo generale">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/User.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/User.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,18 +56,21 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.Main.executor": "Run",
+    "Application.Run JavaFX.executor": "Run",
+    "Maven.mailServer [--version].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/programmi/progettoProg3/mainClient",
+    "last_opened_file_path": "C:/Users/feder/.jdks/javafx-sdk-23.0.1/lib/javafx.web.jar",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "reference.settings.project.maven.repository.indices",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -94,7 +100,7 @@
       <workItem from="1733567930929" duration="2237000" />
       <workItem from="1734104395070" duration="1896000" />
       <workItem from="1734198665866" duration="2943000" />
-      <workItem from="1736517251631" duration="1932000" />
+      <workItem from="1736517251631" duration="1459000" />
     </task>
     <task id="LOCAL-00001" summary="ghj">
       <option name="closed" value="true" />
@@ -192,13 +198,13 @@
       <option name="project" value="LOCAL" />
       <updated>1736517328051</updated>
     </task>
-    <task id="LOCAL-00013" summary="small changes">
+    <task id="LOCAL-00013" summary="pulizia codice, controllo generale">
       <option name="closed" value="true" />
-      <created>1736520394340</created>
+      <created>1736590677765</created>
       <option name="number" value="00013" />
       <option name="presentableId" value="LOCAL-00013" />
       <option name="project" value="LOCAL" />
-      <updated>1736520394340</updated>
+      <updated>1736590677765</updated>
     </task>
     <option name="localTasksCounter" value="14" />
     <servers />
@@ -217,6 +223,7 @@
     <MESSAGE value="merge" />
     <MESSAGE value="refresh lato server" />
     <MESSAGE value="small changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="small changes" />
+    <MESSAGE value="pulizia codice, controllo generale" />
+    <option name="LAST_COMMIT_MESSAGE" value="pulizia codice, controllo generale" />
   </component>
 </project>
