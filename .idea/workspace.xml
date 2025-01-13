@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="203dd4a8-770a-481a-8f1d-a0871a3b2a3c" name="Changes" comment="modifiche sul pom">
+    <list default="true" id="203dd4a8-770a-481a-8f1d-a0871a3b2a3c" name="Changes" comment="pulizia codice, controllo generale">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mailserver/model/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mailserver/model/ClientHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/User.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/User.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -203,15 +206,7 @@
       <option name="project" value="LOCAL" />
       <updated>1736590677765</updated>
     </task>
-    <task id="LOCAL-00014" summary="modifiche sul pom">
-      <option name="closed" value="true" />
-      <created>1736608070523</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1736608070523</updated>
-    </task>
-    <option name="localTasksCounter" value="15" />
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -229,7 +224,6 @@
     <MESSAGE value="refresh lato server" />
     <MESSAGE value="small changes" />
     <MESSAGE value="pulizia codice, controllo generale" />
-    <MESSAGE value="modifiche sul pom" />
-    <option name="LAST_COMMIT_MESSAGE" value="modifiche sul pom" />
+    <option name="LAST_COMMIT_MESSAGE" value="pulizia codice, controllo generale" />
   </component>
 </project>

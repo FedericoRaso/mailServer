@@ -326,37 +326,39 @@ public class ClientHandler implements Runnable {
      */
     public String receiversChecks(String receivers){
         readLock.lock();
-        for (String email : receivers.split(", ")) {
+        try {
+            for (String email : receivers.split(", ")) {
+                controller.addLog(email);
+                if (!isValidEmail(email)) {
+                    return email;
+                } else {
+                    try {
+                        JSONParser parser = new JSONParser();
+                        Object obj = parser.parse(new FileReader(path));
+                        JSONArray jsonArray = (JSONArray) obj;
 
-            if(!isValidEmail(email)){
-                return email;
-            }else{
-                try{
-                    JSONParser parser = new JSONParser();
-                    Object obj = parser.parse(new FileReader(path));
-                    JSONArray jsonArray = (JSONArray) obj;
+                        boolean isFound = false;
 
-                    boolean isFound=false;
+                        for (Object o : jsonArray) {
+                            JSONObject person = (JSONObject) o;
+                            String nome = (String) person.get("email");
 
-                    for (Object o : jsonArray) {
-                        JSONObject person = (JSONObject) o;
-                        String nome = (String) person.get("email");
-
-                        if(nome.equals(email)) {
-                            isFound=true;
-                            break;
+                            if (nome.equals(email)) {
+                                isFound = true;
+                                break;
+                            }
                         }
-                    }
 
-                    if(!isFound){
-                        return email;
+                        if (!isFound) {
+                            return email;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                }catch(Exception e){
-                    e.printStackTrace();
-                } finally {
-                    readLock.unlock();
                 }
             }
+        }finally{
+            readLock.unlock();
         }
 
         return "OK";
