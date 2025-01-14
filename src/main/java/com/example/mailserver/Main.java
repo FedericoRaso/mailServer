@@ -19,6 +19,7 @@ public class Main extends Application {
      * @param stage : stage of the view
      * @throws Exception : exception thrown "load" method
      */
+
     @Override
     public void start(Stage stage) throws Exception {
 
