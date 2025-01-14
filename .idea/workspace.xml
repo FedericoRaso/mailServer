@@ -7,7 +7,8 @@
     <list default="true" id="203dd4a8-770a-481a-8f1d-a0871a3b2a3c" name="Changes" comment="pulizia codice, controllo generale">
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mailserver/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mailserver/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mailserver/model/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mailserver/model/ClientHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/data/User.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/User.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -59,9 +60,9 @@
     "Application.Run JavaFX.executor": "Run",
     "Maven.mailServer [--version].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "risolvoProblema",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/feder/.jdks/javafx-sdk-23.0.1/lib/javafx.web.jar",
+    "last_opened_file_path": "C:/Users/feder/Desktop/Vero_Progetto Prog III/mianClient",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -206,7 +207,15 @@
       <option name="project" value="LOCAL" />
       <updated>1736590677765</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="merge">
+      <option name="closed" value="true" />
+      <created>1736759295110</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1736759295110</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -220,10 +229,10 @@
     <MESSAGE value="nuovo file json" />
     <MESSAGE value="Delete Server solo iniziato" />
     <MESSAGE value="gestione dei controlli nella send" />
-    <MESSAGE value="merge" />
     <MESSAGE value="refresh lato server" />
     <MESSAGE value="small changes" />
     <MESSAGE value="pulizia codice, controllo generale" />
-    <option name="LAST_COMMIT_MESSAGE" value="pulizia codice, controllo generale" />
+    <MESSAGE value="merge" />
+    <option name="LAST_COMMIT_MESSAGE" value="merge" />
   </component>
 </project>
