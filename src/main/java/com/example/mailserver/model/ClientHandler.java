@@ -7,6 +7,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.locks.*;
 import java.util.regex.Matcher;
@@ -25,6 +26,7 @@ public class ClientHandler implements Runnable {
     private Lock readLock = readWriteLock.readLock();
     private Lock writeLock = readWriteLock.writeLock();
     private final String path = "src/main/resources/data/User.json";
+    private ArrayList<String> newElements = new ArrayList<>();
 
     /**
      *
@@ -54,7 +56,7 @@ public class ClientHandler implements Runnable {
 
         try {
             Protocol protocol = Protocol.valueOf(in.nextLine());
-            System.out.println("protocol " + protocol);
+            //System.out.println("protocol " + protocol);
             switch (protocol) {
                 case LOGIN -> {
 
@@ -87,22 +89,15 @@ public class ClientHandler implements Runnable {
                 }
                 case REFRESH -> {
                     String userInfo= in.nextLine();
-                    String oldInbox = in.nextLine();
-                    String newInbox = getInbox(userInfo);;
-
-                    if(oldInbox.equals(newInbox)){
-                        out.println("no changes");
-
-                    }else {
-                        out.println("changes");
-                        if(oldInbox.length() > newInbox.length()){
-                            out.println("deletion");
-                        }else{
-                            out.println("addition");
-                        }
-                        out.println(getInbox(userInfo));
-                        controller.addLog(userInfo + " refreshed");
+                    System.out.println(newElements.toString()+" riga 92");
+                    JSONArray mailsNew = (JSONArray) getNewMails(userInfo);
+                    if(!mailsNew.toString().equals("[]")) {
+                        controller.addLog(mailsNew.toString());
                     }
+
+                    out.println(mailsNew.toJSONString());
+
+
                 }
                 case LOGOUT -> {
                     String user = in.nextLine();
@@ -119,6 +114,43 @@ public class ClientHandler implements Runnable {
                 System.out.println("Error closing the client handler: "+e.getMessage());
             }
         }
+    }
+
+    private JSONArray getNewMails(String userInfo){
+        JSONArray newMailsJson = new JSONArray();
+        JSONParser parser = new JSONParser();
+        JSONArray users = null;
+        JSONArray mails = null;
+
+        try{
+            Object obj = parser.parse(new FileReader(path));
+            users = (JSONArray) obj;
+            for(int i=0;i<users.size();i++){
+                JSONObject userJson = (JSONObject) users.get(i);
+                if(userJson.get("email").equals(userInfo)){
+                    mails = (JSONArray) userJson.get("inbox");
+                    break;
+                }
+            }
+        } catch (IOException | ParseException e) {
+            controller.addLog("there was a problem");
+        }
+
+        for(String s : newElements){
+            String[] element = s.split(", ");
+            if(element[0].equals(userInfo)){
+                controller.addLog(element[0]+" "+element[1]);
+                for(Object o : mails){
+                    JSONObject mailJson = (JSONObject) o;
+                    if(mailJson.get("id").equals(element[1])){
+                        controller.addLog(mailJson.toString());
+                        newMailsJson.add(mailJson);
+                        newElements.remove(s);
+                    }
+                }
+            }
+        }
+        return newMailsJson;
     }
 
 
@@ -230,8 +262,20 @@ public class ClientHandler implements Runnable {
             JSONArray users = (JSONArray) obj;
             obj = parser.parse(newMail);
             JSONObject mailToAdd = (JSONObject) obj;
+
+
+
+
             JSONArray inbox = (JSONArray) mailToAdd.get("inbox");
             JSONArray receivers = (JSONArray) mailToAdd.get("receivers");
+            int j=0;
+            for(Object o : receivers) {
+                JSONObject person = (JSONObject) o;
+
+                String newEmail = (String) person.get(j)+", "+mailToAdd.get("id");
+                newElements.add(newEmail);
+                j++;
+            }
 
             for(int i=0; i<users.size(); i++){
                 JSONObject person = (JSONObject) users.get(i);
@@ -274,14 +318,12 @@ public class ClientHandler implements Runnable {
             JSONParser parser = new JSONParser();
             Object obj = parser.parse(new FileReader(path));
             JSONArray users = (JSONArray) obj;
-
             for (int i = 0; i < users.size(); i++) {
                 JSONObject utente = (JSONObject) users.get(i);
                 String emailUtente = (String)utente.get("email");
 
                 if (emailUtente.equals(userDaCercare)) {
                     JSONArray inbox = (JSONArray) utente.get("inbox");
-
                     for (int j = 0; j < inbox.size(); j++) {
                         JSONObject email = (JSONObject) inbox.get(j);
                         if (email.get("id").equals(idDaEliminare)) {
