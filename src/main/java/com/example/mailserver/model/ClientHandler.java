@@ -5,9 +5,11 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.locks.*;
 import java.util.regex.Matcher;
@@ -26,7 +28,7 @@ public class ClientHandler implements Runnable {
     private Lock readLock = readWriteLock.readLock();
     private Lock writeLock = readWriteLock.writeLock();
     private final String path = "src/main/resources/data/User.json";
-    private ArrayList<String> newElements = new ArrayList<>();
+    private static List<String[]> newEmails = new ArrayList<>();
 
     /**
      *
@@ -56,7 +58,7 @@ public class ClientHandler implements Runnable {
 
         try {
             Protocol protocol = Protocol.valueOf(in.nextLine());
-            //System.out.println("protocol " + protocol);
+            System.out.println("protocol " + protocol);
             switch (protocol) {
                 case LOGIN -> {
 
@@ -88,16 +90,15 @@ public class ClientHandler implements Runnable {
                     controller.addLog("Email "+protocol+" "+newMail);
                 }
                 case REFRESH -> {
-                    String userInfo= in.nextLine();
-                    System.out.println(newElements.toString()+" riga 92");
-                    JSONArray mailsNew = (JSONArray) getNewMails(userInfo);
-                    if(!mailsNew.toString().equals("[]")) {
-                        controller.addLog(mailsNew.toString());
+
+                    String userInfo = in.nextLine();
+                    String answer = getRefresh(userInfo);
+
+                    if(!answer.equals("no changes")){
+                        controller.addLog(userInfo + " refreshed");
                     }
 
-                    out.println(mailsNew.toJSONString());
-
-
+                    out.println(answer);
                 }
                 case LOGOUT -> {
                     String user = in.nextLine();
@@ -116,43 +117,24 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    private JSONArray getNewMails(String userInfo){
-        JSONArray newMailsJson = new JSONArray();
-        JSONParser parser = new JSONParser();
-        JSONArray users = null;
-        JSONArray mails = null;
+    public String getRefresh(String user){
 
-        try{
-            Object obj = parser.parse(new FileReader(path));
-            users = (JSONArray) obj;
-            for(int i=0;i<users.size();i++){
-                JSONObject userJson = (JSONObject) users.get(i);
-                if(userJson.get("email").equals(userInfo)){
-                    mails = (JSONArray) userJson.get("inbox");
-                    break;
+        if(newEmails == null || newEmails.isEmpty()){
+            return "no changes";
+        }else {
+
+            for (String[] newMail : newEmails) {
+
+                if (newMail[0].equals(user)) {
+                    String answer = newMail[1];
+                    newEmails.remove(newMail);
+                    return answer;
                 }
             }
-        } catch (IOException | ParseException e) {
-            controller.addLog("there was a problem");
-        }
 
-        for(String s : newElements){
-            String[] element = s.split(", ");
-            if(element[0].equals(userInfo)){
-                controller.addLog(element[0]+" "+element[1]);
-                for(Object o : mails){
-                    JSONObject mailJson = (JSONObject) o;
-                    if(mailJson.get("id").equals(element[1])){
-                        controller.addLog(mailJson.toString());
-                        newMailsJson.add(mailJson);
-                        newElements.remove(s);
-                    }
-                }
-            }
+            return "no changes";
         }
-        return newMailsJson;
     }
-
 
     /**
      *
@@ -174,7 +156,7 @@ public class ClientHandler implements Runnable {
      * @param user : user whose inbox is requested
      * @return : string representation
      */
-    public String getInbox(String user){
+    public JSONArray getInbox(String user){
         readLock.lock();
         JSONArray newInbox = null;
         JSONParser parser = new JSONParser();
@@ -200,7 +182,7 @@ public class ClientHandler implements Runnable {
         } finally {
             readLock.unlock();
         }
-        return newInbox.toJSONString() ;
+        return newInbox ;
     }
 
     /**
@@ -211,40 +193,14 @@ public class ClientHandler implements Runnable {
      * @return : result of the checks
      */
     public String loginChecks(String line) {
-        readLock.lock();
-        JSONParser parser = new JSONParser();
-        boolean isFound=false;
 
         if(!isValidEmail(line)) {
             return "nome@gmail.com";
         }else{
-            try {
-                Object obj = parser.parse(new FileReader(path));
-                JSONArray jsonArray = (JSONArray) obj;
-                int i=0;
 
-                for (Object o : jsonArray) {
-                    JSONObject person = (JSONObject) o;
-                    String nome = (String) person.get("email");
+            inbox = getInbox(line);
 
-                    if(nome.equals(line)) {
-                        if(inbox == null) {
-                            inbox = new JSONArray();
-                        }
-
-                        inbox = (JSONArray) person.get("inbox");
-                        isFound=true;
-                        break;
-                    }
-                }
-
-            } catch (IOException | ParseException e) {
-                e.printStackTrace();
-            } finally {
-                readLock.unlock();
-            }
-
-            return (isFound) ? "correct":"wrong";
+            return (inbox==null) ? "wrong":"correct";
         }
     }
 
@@ -262,20 +218,7 @@ public class ClientHandler implements Runnable {
             JSONArray users = (JSONArray) obj;
             obj = parser.parse(newMail);
             JSONObject mailToAdd = (JSONObject) obj;
-
-
-
-
-            JSONArray inbox = (JSONArray) mailToAdd.get("inbox");
             JSONArray receivers = (JSONArray) mailToAdd.get("receivers");
-            int j=0;
-            for(Object o : receivers) {
-                JSONObject person = (JSONObject) o;
-
-                String newEmail = (String) person.get(j)+", "+mailToAdd.get("id");
-                newElements.add(newEmail);
-                j++;
-            }
 
             for(int i=0; i<users.size(); i++){
                 JSONObject person = (JSONObject) users.get(i);
@@ -285,6 +228,9 @@ public class ClientHandler implements Runnable {
                     if(userEmail.equals(toAddEmail)){
                         JSONArray userInbox = (JSONArray) person.get("inbox");
                         userInbox.add(mailToAdd);
+
+                        newEmails.add(new String[]{userEmail, mailToAdd.toString()});
+
                     }
                 }
 
@@ -318,12 +264,14 @@ public class ClientHandler implements Runnable {
             JSONParser parser = new JSONParser();
             Object obj = parser.parse(new FileReader(path));
             JSONArray users = (JSONArray) obj;
+
             for (int i = 0; i < users.size(); i++) {
                 JSONObject utente = (JSONObject) users.get(i);
                 String emailUtente = (String)utente.get("email");
 
                 if (emailUtente.equals(userDaCercare)) {
                     JSONArray inbox = (JSONArray) utente.get("inbox");
+
                     for (int j = 0; j < inbox.size(); j++) {
                         JSONObject email = (JSONObject) inbox.get(j);
                         if (email.get("id").equals(idDaEliminare)) {
@@ -370,7 +318,7 @@ public class ClientHandler implements Runnable {
         readLock.lock();
         try {
             for (String email : receivers.split(", ")) {
-                controller.addLog(email);
+
                 if (!isValidEmail(email)) {
                     return email;
                 } else {
@@ -397,12 +345,13 @@ public class ClientHandler implements Runnable {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }
-            }
-        }finally{
-            readLock.unlock();
-        }
 
+                }
+
+            }
+        }finally {
+        readLock.unlock();
+        }
         return "OK";
     }
 
