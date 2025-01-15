@@ -12,13 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.locks.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 public class ClientHandler implements Runnable {
     private Socket incoming;
     private LogController controller;
-    private static final String EMAIL_REGEX = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
     private JSONArray inbox =null;
     private InputStream inStream = null;
     private OutputStream outStream = null;
@@ -54,7 +52,6 @@ public class ClientHandler implements Runnable {
      */
     @Override
     public void run() {
-
 
         try {
             Protocol protocol = Protocol.valueOf(in.nextLine());
@@ -194,14 +191,9 @@ public class ClientHandler implements Runnable {
      */
     public String loginChecks(String line) {
 
-        if(!isValidEmail(line)) {
-            return "nome@gmail.com";
-        }else{
-
             inbox = getInbox(line);
 
             return (inbox==null) ? "wrong":"correct";
-        }
     }
 
     /**
@@ -294,18 +286,7 @@ public class ClientHandler implements Runnable {
 
     }
 
-    /**
-     *
-     * method used to check if the mail format is correct
-     *
-     * @param email : email to be checked
-     * @return : result of the checks
-     */
-    public static boolean isValidEmail(String email) {
-        Pattern pattern = Pattern.compile(EMAIL_REGEX);
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
-    }
+
 
     /**
      *
@@ -318,39 +299,35 @@ public class ClientHandler implements Runnable {
         readLock.lock();
         try {
             for (String email : receivers.split(", ")) {
+                try {
+                    JSONParser parser = new JSONParser();
+                    Object obj = parser.parse(new FileReader(path));
+                    JSONArray jsonArray = (JSONArray) obj;
 
-                if (!isValidEmail(email)) {
-                    return email;
-                } else {
-                    try {
-                        JSONParser parser = new JSONParser();
-                        Object obj = parser.parse(new FileReader(path));
-                        JSONArray jsonArray = (JSONArray) obj;
+                    boolean isFound = false;
 
-                        boolean isFound = false;
+                    for (Object o : jsonArray) {
+                        JSONObject person = (JSONObject) o;
+                        String nome = (String) person.get("email");
 
-                        for (Object o : jsonArray) {
-                            JSONObject person = (JSONObject) o;
-                            String nome = (String) person.get("email");
-
-                            if (nome.equals(email)) {
-                                isFound = true;
-                                break;
-                            }
+                        if (nome.equals(email)) {
+                            isFound = true;
+                            break;
                         }
-
-                        if (!isFound) {
-                            return email;
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
 
+                    if (!isFound) {
+                        return email;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
             }
+
+
         }finally {
-        readLock.unlock();
+            readLock.unlock();
         }
         return "OK";
     }
