@@ -5,17 +5,18 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.locks.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 public class ClientHandler implements Runnable {
     private Socket incoming;
     private LogController controller;
-    private static final String EMAIL_REGEX = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
     private JSONArray inbox =null;
     private InputStream inStream = null;
     private OutputStream outStream = null;
@@ -25,6 +26,7 @@ public class ClientHandler implements Runnable {
     private Lock readLock = readWriteLock.readLock();
     private Lock writeLock = readWriteLock.writeLock();
     private final String path = "src/main/resources/data/User.json";
+    private static List<String[]> newEmails = new ArrayList<>();
 
     /**
      *
@@ -50,7 +52,6 @@ public class ClientHandler implements Runnable {
      */
     @Override
     public void run() {
-
 
         try {
             Protocol protocol = Protocol.valueOf(in.nextLine());
@@ -86,23 +87,15 @@ public class ClientHandler implements Runnable {
                     controller.addLog("Email "+protocol+" "+newMail);
                 }
                 case REFRESH -> {
-                    String userInfo= in.nextLine();
-                    String oldInbox = in.nextLine();
-                    String newInbox = getInbox(userInfo);;
 
-                    if(oldInbox.equals(newInbox)){
-                        out.println("no changes");
+                    String userInfo = in.nextLine();
+                    String answer = getRefresh(userInfo);
 
-                    }else {
-                        out.println("changes");
-                        if(oldInbox.length() > newInbox.length()){
-                            out.println("deletion");
-                        }else{
-                            out.println("addition");
-                        }
-                        out.println(getInbox(userInfo));
+                    if(!answer.equals("no changes")){
                         controller.addLog(userInfo + " refreshed");
                     }
+
+                    out.println(answer);
                 }
                 case LOGOUT -> {
                     String user = in.nextLine();
@@ -121,6 +114,24 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    public String getRefresh(String user){
+
+        if(newEmails == null || newEmails.isEmpty()){
+            return "no changes";
+        }else {
+
+            for (String[] newMail : newEmails) {
+
+                if (newMail[0].equals(user)) {
+                    String answer = newMail[1];
+                    newEmails.remove(newMail);
+                    return answer;
+                }
+            }
+
+            return "no changes";
+        }
+    }
 
     /**
      *
@@ -142,7 +153,7 @@ public class ClientHandler implements Runnable {
      * @param user : user whose inbox is requested
      * @return : string representation
      */
-    public String getInbox(String user){
+    public JSONArray getInbox(String user){
         readLock.lock();
         JSONArray newInbox = null;
         JSONParser parser = new JSONParser();
@@ -168,7 +179,7 @@ public class ClientHandler implements Runnable {
         } finally {
             readLock.unlock();
         }
-        return newInbox.toJSONString() ;
+        return newInbox ;
     }
 
     /**
@@ -179,41 +190,10 @@ public class ClientHandler implements Runnable {
      * @return : result of the checks
      */
     public String loginChecks(String line) {
-        readLock.lock();
-        JSONParser parser = new JSONParser();
-        boolean isFound=false;
 
-        if(!isValidEmail(line)) {
-            return "nome@gmail.com";
-        }else{
-            try {
-                Object obj = parser.parse(new FileReader(path));
-                JSONArray jsonArray = (JSONArray) obj;
-                int i=0;
+            inbox = getInbox(line);
 
-                for (Object o : jsonArray) {
-                    JSONObject person = (JSONObject) o;
-                    String nome = (String) person.get("email");
-
-                    if(nome.equals(line)) {
-                        if(inbox == null) {
-                            inbox = new JSONArray();
-                        }
-
-                        inbox = (JSONArray) person.get("inbox");
-                        isFound=true;
-                        break;
-                    }
-                }
-
-            } catch (IOException | ParseException e) {
-                e.printStackTrace();
-            } finally {
-                readLock.unlock();
-            }
-
-            return (isFound) ? "correct":"wrong";
-        }
+            return (inbox==null) ? "wrong":"correct";
     }
 
     /**
@@ -230,7 +210,6 @@ public class ClientHandler implements Runnable {
             JSONArray users = (JSONArray) obj;
             obj = parser.parse(newMail);
             JSONObject mailToAdd = (JSONObject) obj;
-            JSONArray inbox = (JSONArray) mailToAdd.get("inbox");
             JSONArray receivers = (JSONArray) mailToAdd.get("receivers");
 
             for(int i=0; i<users.size(); i++){
@@ -241,6 +220,9 @@ public class ClientHandler implements Runnable {
                     if(userEmail.equals(toAddEmail)){
                         JSONArray userInbox = (JSONArray) person.get("inbox");
                         userInbox.add(mailToAdd);
+
+                        newEmails.add(new String[]{userEmail, mailToAdd.toString()});
+
                     }
                 }
 
@@ -304,18 +286,7 @@ public class ClientHandler implements Runnable {
 
     }
 
-    /**
-     *
-     * method used to check if the mail format is correct
-     *
-     * @param email : email to be checked
-     * @return : result of the checks
-     */
-    public static boolean isValidEmail(String email) {
-        Pattern pattern = Pattern.compile(EMAIL_REGEX);
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
-    }
+
 
     /**
      *
@@ -326,39 +297,38 @@ public class ClientHandler implements Runnable {
      */
     public String receiversChecks(String receivers){
         readLock.lock();
-        for (String email : receivers.split(", ")) {
-
-            if(!isValidEmail(email)){
-                return email;
-            }else{
-                try{
+        try {
+            for (String email : receivers.split(", ")) {
+                try {
                     JSONParser parser = new JSONParser();
                     Object obj = parser.parse(new FileReader(path));
                     JSONArray jsonArray = (JSONArray) obj;
 
-                    boolean isFound=false;
+                    boolean isFound = false;
 
                     for (Object o : jsonArray) {
                         JSONObject person = (JSONObject) o;
                         String nome = (String) person.get("email");
 
-                        if(nome.equals(email)) {
-                            isFound=true;
+                        if (nome.equals(email)) {
+                            isFound = true;
                             break;
                         }
                     }
 
-                    if(!isFound){
+                    if (!isFound) {
                         return email;
                     }
-                }catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
-                } finally {
-                    readLock.unlock();
                 }
-            }
-        }
 
+            }
+
+
+        }finally {
+            readLock.unlock();
+        }
         return "OK";
     }
 
