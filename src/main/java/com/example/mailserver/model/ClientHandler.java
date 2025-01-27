@@ -22,9 +22,12 @@ public class ClientHandler implements Runnable {
     private OutputStream outStream = null;
     private Scanner in = null;
     private PrintWriter out = null;
-    private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
-    private Lock readLock = readWriteLock.readLock();
-    private Lock writeLock = readWriteLock.writeLock();
+    private ReadWriteLock readWriteLockJSON = new ReentrantReadWriteLock();
+    private Lock readLockJSON = readWriteLockJSON.readLock();
+    private Lock writeLockJSON = readWriteLockJSON.writeLock();
+    private ReadWriteLock readWriteLockNewMails = new ReentrantReadWriteLock();
+    private Lock readLockNewMails = readWriteLockNewMails.readLock();
+    private Lock writeLockNewMails = readWriteLockNewMails.writeLock();
     private final String path = "src/main/resources/data/User.json";
     private static List<String[]> newEmails = new ArrayList<>();
 
@@ -79,8 +82,8 @@ public class ClientHandler implements Runnable {
                     }
                 }
                 case SEND, FORWARD, REPLYALL, REPLY ->{
-                    String recevers = in.nextLine();
-                    String controlReceivers = receiversChecks(recevers);
+                    String receivers = in.nextLine();
+                    String controlReceivers = receiversChecks(receivers);
                     out.println(controlReceivers);
                     String newMail = in.nextLine();
                     sendMail(newMail);
@@ -115,23 +118,30 @@ public class ClientHandler implements Runnable {
     }
 
     public String getRefresh(String user){
-
+        readLockNewMails.lock();
         if(newEmails == null || newEmails.isEmpty()){
+            readLockNewMails.unlock();
             return "no changes";
         }else {
 
             for (String[] newMail : newEmails) {
 
                 if (newMail[0].equals(user)) {
+                    System.out.println(newMail[1]);
                     String answer = newMail[1];
+                    readLockNewMails.unlock();
+                    writeLockNewMails.lock();
+                    System.out.println(newEmails.size());
                     newEmails.remove(newMail);
+                    writeLockNewMails.unlock();
                     return answer;
                 }
             }
-
+            readLockNewMails.unlock();
             return "no changes";
         }
     }
+
 
     /**
      *
@@ -154,7 +164,7 @@ public class ClientHandler implements Runnable {
      * @return : string representation
      */
     public JSONArray getInbox(String user){
-        readLock.lock();
+        readLockJSON.lock();
         JSONArray newInbox = null;
         JSONParser parser = new JSONParser();
 
@@ -177,7 +187,7 @@ public class ClientHandler implements Runnable {
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         } finally {
-            readLock.unlock();
+            readLockJSON.unlock();
         }
         return newInbox ;
     }
@@ -203,7 +213,7 @@ public class ClientHandler implements Runnable {
      * @param newMail : mail to be sent
      */
     public void sendMail (String newMail){
-        writeLock.lock();
+        writeLockJSON.lock();
         JSONParser parser = new JSONParser();
         try{
             Object obj = parser.parse(new FileReader(path));
@@ -220,9 +230,9 @@ public class ClientHandler implements Runnable {
                     if(userEmail.equals(toAddEmail)){
                         JSONArray userInbox = (JSONArray) person.get("inbox");
                         userInbox.add(mailToAdd);
-
+                        writeLockNewMails.lock();
                         newEmails.add(new String[]{userEmail, mailToAdd.toString()});
-
+                        writeLockNewMails.unlock();
                     }
                 }
 
@@ -234,7 +244,7 @@ public class ClientHandler implements Runnable {
         }catch (ParseException | IOException e){
             e.printStackTrace();
         }finally{
-            writeLock.unlock();
+            writeLockJSON.unlock();
         }
 
     }
@@ -247,7 +257,7 @@ public class ClientHandler implements Runnable {
      * @param idMail : id of the mail to be deleted
      */
     public void deleteMail(String user, String idMail){
-        writeLock.lock();
+        writeLockJSON.lock();
         String userDaCercare = user;
         String idDaEliminare = idMail;
 
@@ -281,7 +291,7 @@ public class ClientHandler implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         }finally{
-            writeLock.unlock();
+            writeLockJSON.unlock();
         }
 
     }
@@ -296,7 +306,7 @@ public class ClientHandler implements Runnable {
      * @return : result of the checks
      */
     public String receiversChecks(String receivers){
-        readLock.lock();
+        readLockJSON.lock();
         try {
             for (String email : receivers.split(", ")) {
                 try {
@@ -327,7 +337,7 @@ public class ClientHandler implements Runnable {
 
 
         }finally {
-            readLock.unlock();
+            readLockJSON.unlock();
         }
         return "OK";
     }
