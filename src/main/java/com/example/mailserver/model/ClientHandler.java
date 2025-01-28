@@ -69,6 +69,7 @@ public class ClientHandler implements Runnable {
                         controller.addLog(line + " logged in");
                         out.println(inbox);
                     } else {
+                        controller.addLog(line+" does not exist");
                         out.println(answer);
                     }
                 }
@@ -127,11 +128,9 @@ public class ClientHandler implements Runnable {
             for (String[] newMail : newEmails) {
 
                 if (newMail[0].equals(user)) {
-                    System.out.println(newMail[1]);
                     String answer = newMail[1];
                     readLockNewMails.unlock();
                     writeLockNewMails.lock();
-                    System.out.println(newEmails.size());
                     newEmails.remove(newMail);
                     writeLockNewMails.unlock();
                     return answer;
@@ -327,6 +326,7 @@ public class ClientHandler implements Runnable {
                     }
 
                     if (!isFound) {
+                        controller.addLog(email+" does not exist");
                         return email;
                     }
                 } catch (Exception e) {
